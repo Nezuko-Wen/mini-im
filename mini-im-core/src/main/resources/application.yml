@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: mini-im
+  profiles:
+    active: test
+logging:
+  level:
+    .*: DEBUG
+  config: classpath:logback-custom.xml
