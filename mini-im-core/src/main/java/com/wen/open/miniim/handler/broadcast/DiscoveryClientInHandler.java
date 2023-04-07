@@ -19,18 +19,15 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class DiscoveryClientInHandler extends ChannelInboundHandlerAdapter {
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        ctx.executor().parent().execute(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 0; i < 10; i++) {
-                    ctx.writeAndFlush(new DatagramPacket(Unpooled.copiedBuffer("我在广播" + i,
-                            StandardCharsets.UTF_8), new InetSocketAddress("255.255.255.255", 10000)));
-                    try {
-                        TimeUnit.SECONDS.sleep(2);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+    public void channelActive(ChannelHandlerContext ctx) {
+        ctx.executor().parent().execute(() -> {
+            for (int i = 0; i < 10; i++) {
+                ctx.writeAndFlush(new DatagramPacket(Unpooled.copiedBuffer("我在广播" + i,
+                        StandardCharsets.UTF_8), new InetSocketAddress("255.255.255.255", 10000)));
+                try {
+                    TimeUnit.SECONDS.sleep(2);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         });
