@@ -1,0 +1,4 @@
+config:
+  default-hostname: 'UNKNOWN'
+  broad-duration: 1
+  port: 10000

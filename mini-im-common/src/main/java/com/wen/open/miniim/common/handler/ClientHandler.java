@@ -23,7 +23,6 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        log.info("-------------cliList");
         StringBuilder onlineList = new StringBuilder();
         for (Map.Entry<String, String> entry : GlobalEnvironmentContext.cliMap.entrySet()) {
             onlineList.append("ip:").append(entry.getValue()).append(" hostname:").append(entry.getKey()).append("\n");

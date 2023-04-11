@@ -2,12 +2,8 @@ spring:
   application:
     name: mini-im
   profiles:
-    active: dev
+    active: '@activatedProperties@'
 logging:
   level:
     .*: DEBUG
   config: classpath:logback-custom.xml
-config:
-  default-hostname: 'UNKNOWN'
-  broad-duration: 1
-  port: 10000
