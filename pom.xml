@@ -20,7 +20,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <netty-version>4.1.88.Final-SNAPSHOT</netty-version>
+        <netty-version>4.1.88.Final</netty-version>
         <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
         <lombok.version>1.18.10</lombok.version>
         <project.version>1.0-SNAPSHOT</project.version>
