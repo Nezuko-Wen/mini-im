@@ -2,7 +2,7 @@ spring:
   application:
     name: mini-im
   profiles:
-    active: test
+    active: dev
 logging:
   level:
     .*: DEBUG

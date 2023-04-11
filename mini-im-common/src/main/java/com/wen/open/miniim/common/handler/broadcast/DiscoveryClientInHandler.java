@@ -1,6 +1,6 @@
-package com.wen.open.miniim.handler.broadcast;
+package com.wen.open.miniim.common.handler.broadcast;
 
-import com.wen.open.miniim.context.GlobalEnvironmentContext;
+import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;

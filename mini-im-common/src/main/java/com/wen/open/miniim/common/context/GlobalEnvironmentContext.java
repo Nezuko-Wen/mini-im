@@ -1,4 +1,4 @@
-package com.wen.open.miniim.context;
+package com.wen.open.miniim.common.context;
 
 import io.netty.channel.socket.DatagramPacket;
 

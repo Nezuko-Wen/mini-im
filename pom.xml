@@ -15,13 +15,16 @@
     <packaging>pom</packaging>
     <modules>
         <module>mini-im-core</module>
+        <module>mini-im-common</module>
     </modules>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
         <netty-version>4.1.88.Final-SNAPSHOT</netty-version>
-        <spring-boot-starter.version>2.3.2.RELEASE</spring-boot-starter.version>
+        <spring-boot.version>2.3.2.RELEASE</spring-boot.version>
         <lombok.version>1.18.10</lombok.version>
+        <project.version>1.0-SNAPSHOT</project.version>
+        <fastjson.version>1.2.83</fastjson.version>
     </properties>
 
     <dependencyManagement>
@@ -34,13 +37,28 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter</artifactId>
-                <version>${spring-boot-starter.version}</version>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring-boot.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
                 <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.wen.open</groupId>
+                <artifactId>mini-im-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${fastjson.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
