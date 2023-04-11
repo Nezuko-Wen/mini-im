@@ -11,7 +11,9 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum Command {
 
-    LOGIN_REQUEST((byte) 0x01);
+    LOGIN_REQUEST((byte) 0x01),
+    BROADCAST((byte) 0x02),
+    ;
 
     private final Byte val;
 

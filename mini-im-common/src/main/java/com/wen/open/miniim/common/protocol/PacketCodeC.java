@@ -14,6 +14,8 @@ import java.util.Map;
  */
 public class PacketCodeC {
 
+    public static final PacketCodeC INSTANCE = new PacketCodeC();
+
     //代表是mini-im制定的协议
     private static final int MAGIC_NUMBER = 0x12345678;
 
@@ -23,6 +25,7 @@ public class PacketCodeC {
     static {
         packetTypeMap = new HashMap<>();
         packetTypeMap.put(Command.LOGIN_REQUEST.getVal(), LoginRequestPacket.class);
+        packetTypeMap.put(Command.BROADCAST.getVal(), BroadcastPacket.class);
 
         serializerMap = new HashMap<>();
         Serializer jsonSerializer = new JSONSerializer();

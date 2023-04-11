@@ -11,5 +11,5 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GlobalEnvironmentContext {
 
     /** 客户端的地址列表 */
-    public static ConcurrentHashMap<String, DatagramPacket> cliMap = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<String, String> cliMap = new ConcurrentHashMap<>();
 }

@@ -14,7 +14,7 @@ public class LoginRequestPacket extends Packet {
     private String password;
 
     @Override
-    Byte getCommand() {
+    public Byte getCommand() {
         return Command.LOGIN_REQUEST.getVal();
     }
 }

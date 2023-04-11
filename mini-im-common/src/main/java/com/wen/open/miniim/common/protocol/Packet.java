@@ -13,6 +13,6 @@ public abstract class Packet {
     private Byte version = 0x01;
 
     @JSONField(serialize = false)
-    abstract Byte getCommand();
+    public abstract Byte getCommand();
 
 }
