@@ -29,7 +29,6 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 //            log.info("hostname:{}", entry.getValue().getHostname());
 //            log.info("serverPort:{}", entry.getValue().getServerPort());
 //        }
-        GlobalEnvironmentContext.hungChannel.add(ctx.channel());
         DatagramPacket packet = (DatagramPacket) msg;
         ByteBuf byteBuf = packet.copy().content();
         Packet data = PacketCodeC.INSTANCE.decode(byteBuf);

@@ -26,6 +26,7 @@ public class GlobalEnvironmentContext {
 
     public static final ConcurrentHashMap<String, Channel> liveChannel = new ConcurrentHashMap<>();
 
+    //TODO 下线
     public static final Set<Channel> hungChannel = new CopyOnWriteArraySet<>();
 
     public static ThreadLocal<String> currentIp = new ThreadLocal<>();

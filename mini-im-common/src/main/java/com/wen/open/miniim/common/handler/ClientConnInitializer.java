@@ -31,7 +31,6 @@ public class ClientConnInitializer extends ChannelInitializer<SocketChannel> {
         channel.pipeline().addLast(new ChannelInboundHandlerAdapter() {
             @Override
             public void channelActive(ChannelHandlerContext ctx) {
-                GlobalEnvironmentContext.hungChannel.add(ctx.channel());
                 String ip = (String) ctx.attr(AttributeKey.valueOf("ip")).get();
                 ctx.writeAndFlush(LogTestUtil.write("你好,zzw"));
                 log.info("conn ip:{}", ip);

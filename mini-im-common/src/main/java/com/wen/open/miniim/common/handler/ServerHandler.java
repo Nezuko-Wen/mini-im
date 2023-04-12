@@ -19,7 +19,6 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-        GlobalEnvironmentContext.hungChannel.add(ctx.channel());
         InetSocketAddress clientAddress = (InetSocketAddress) ctx.channel().remoteAddress();
         String clientIP = clientAddress.getAddress().getHostAddress();
         ByteBuf byteBuf = (ByteBuf) msg;

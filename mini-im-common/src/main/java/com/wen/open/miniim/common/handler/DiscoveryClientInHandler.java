@@ -24,7 +24,6 @@ import java.util.concurrent.TimeUnit;
 public class DiscoveryClientInHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        GlobalEnvironmentContext.hungChannel.add(ctx.channel());
         //开启广播
         holdBroad(ctx);
     }

@@ -49,7 +49,6 @@ public class MiniClient {
         serverBoot.handler(new ChannelInitializer<NioServerSocketChannel>() {
             @Override
             protected void initChannel(NioServerSocketChannel ch) {
-                GlobalEnvironmentContext.hungChannel.add(ch);
                 log.info("服务端启动中");
             }
 
