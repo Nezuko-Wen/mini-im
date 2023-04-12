@@ -1,6 +1,7 @@
 package com.wen.open.miniim.common.handler;
 
 import com.wen.open.miniim.common.context.Constant;
+import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
 import com.wen.open.miniim.common.protocol.BroadcastPacket;
 import com.wen.open.miniim.common.protocol.PacketCodeC;
 import com.wen.open.miniim.common.util.ConfigContextHolder;
@@ -23,6 +24,11 @@ import java.util.concurrent.TimeUnit;
 public class DiscoveryClientInHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
+        //开启广播
+        holdBroad(ctx);
+    }
+
+    private void holdBroad(ChannelHandlerContext ctx) {
         String hostname = ConfigContextHolder.config().getDefaultHostname();
         try {
             InetAddress localhost = InetAddress.getLocalHost();
@@ -32,15 +38,11 @@ public class DiscoveryClientInHandler extends ChannelInboundHandlerAdapter {
         }
         BroadcastPacket broadcastPacket = new BroadcastPacket();
         broadcastPacket.setHostname(hostname);
-        holdBroad(ctx, broadcastPacket);
-    }
-
-    private void holdBroad(ChannelHandlerContext ctx, BroadcastPacket broadcastPacket) {
-        ctx.executor().schedule(() -> {
+        broadcastPacket.setServerPort(GlobalEnvironmentContext.server().port());
+        ctx.executor().scheduleAtFixedRate(() -> {
             ctx.writeAndFlush(new DatagramPacket(encode(broadcastPacket), new InetSocketAddress(Constant.BROADCAST_IP,
-                    ConfigContextHolder.config().getPort())));
-            holdBroad(ctx, broadcastPacket);
-        }, ConfigContextHolder.config().getBroadDuration(), TimeUnit.SECONDS);
+                    ConfigContextHolder.config().getBroadPort())));
+        }, 0, ConfigContextHolder.config().getBroadDuration(), TimeUnit.SECONDS);
     }
 
     private ByteBuf encode(BroadcastPacket broadcastPacket) {

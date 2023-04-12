@@ -17,6 +17,8 @@ public class ConfigContext {
 
     private Long broadDuration;
 
-    private Integer port;
+    private Integer broadPort;
+
+    private Integer serverPort;
 
 }

@@ -11,6 +11,8 @@ public class BroadcastPacket extends Packet{
 
     private String hostname;
 
+    private Integer serverPort;
+
     @Override
     public Byte getCommand() {
         return Command.BROADCAST.getVal();
