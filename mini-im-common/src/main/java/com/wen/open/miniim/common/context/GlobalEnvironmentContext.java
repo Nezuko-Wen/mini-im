@@ -10,7 +10,9 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 /**
  * @author Wen
@@ -24,11 +26,15 @@ public class GlobalEnvironmentContext {
 
     public static final ConcurrentHashMap<String, Channel> liveChannel = new ConcurrentHashMap<>();
 
+    public static final Set<Channel> hungChannel = new CopyOnWriteArraySet<>();
+
     public static ThreadLocal<String> currentIp = new ThreadLocal<>();
 
     public static ServerBoot serverBoot;
 
     public static ClientBoot clientBoot;
+
+    public static boolean broad = true;
 
     /* 扫描客户端线程 */
     public static boolean scanExecutor = false;

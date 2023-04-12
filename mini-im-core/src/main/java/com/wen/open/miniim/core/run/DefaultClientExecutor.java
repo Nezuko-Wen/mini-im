@@ -1,11 +1,15 @@
 package com.wen.open.miniim.core.run;
 
+import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
 import com.wen.open.miniim.common.util.TaskExecutorUtil;
 import com.wen.open.miniim.core.client.MiniClient;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -14,23 +18,36 @@ import java.util.concurrent.TimeUnit;
  */
 @DependsOn("configContextHolder")
 @Component
-public class DefaultClientExecutor implements InitializingBean {
+@Slf4j
+public class DefaultClientExecutor {
     private final MiniClient client;
 
     public DefaultClientExecutor(MiniClient client) {
         this.client = client;
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
+    @PostConstruct
+    public void start() throws Exception {
         client.startUdp();
         //扫描客户端
-        scanStart();
+//        scanStart();
     }
 
     private void scanStart() {
         TaskExecutorUtil.scheduleAtFixedRate(()->{}, 2L,2L, TimeUnit.MINUTES);
     }
 
+    @PreDestroy
+    public void destroy() {
+        GlobalEnvironmentContext.broad = false;
+//        GlobalEnvironmentContext.hungChannel.forEach(c->{
+//            try {
+//                c.closeFuture().sync();
+//            } catch (InterruptedException e) {
+//                throw new RuntimeException(e);
+//            }
+//        });
+        System.out.println("我销毁了");
+    }
 
 }

@@ -1,19 +1,22 @@
 package com.wen.open.miniim.core.client;
 
+import com.wen.open.miniim.common.context.ConfigContextHolder;
 import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
 import com.wen.open.miniim.common.handler.ClientHandler;
 import com.wen.open.miniim.common.handler.DiscoveryClientInHandler;
 import com.wen.open.miniim.common.handler.ServerHandler;
 import com.wen.open.miniim.common.packentity.ServerBoot;
-import com.wen.open.miniim.common.util.ConfigContextHolder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Component;
  * @date 2023/4/7 14:30
  */
 @Component
+@Slf4j
 public class MiniClient {
     public void startUdp() throws Exception {
         connectService();
@@ -45,7 +49,8 @@ public class MiniClient {
         serverBoot.handler(new ChannelInitializer<NioServerSocketChannel>() {
             @Override
             protected void initChannel(NioServerSocketChannel ch) {
-                System.out.println("服务端启动中");
+                GlobalEnvironmentContext.hungChannel.add(ch);
+                log.info("服务端启动中");
             }
 
         });
@@ -60,31 +65,39 @@ public class MiniClient {
 
     private void discoveryService() throws InterruptedException {
         NioEventLoopGroup group = new NioEventLoopGroup();
-        try {
-            Bootstrap b = new Bootstrap();
-            b.group(group).channel(NioDatagramChannel.class)
-                    .option(ChannelOption.SO_BROADCAST, true)
-                    .handler(new ChannelInitializer<NioDatagramChannel>() {
-                        @Override
-                        protected void initChannel(NioDatagramChannel channel) {
-                            channel.pipeline()
-                                    .addLast(new DiscoveryClientInHandler())
-                                    .addLast(new ClientHandler());
-                        }
-                    });
-            b.bind(ConfigContextHolder.config().getBroadPort()).sync().channel().closeFuture().await();
-        } finally {
-            group.shutdownGracefully();
-        }
+        Bootstrap b = new Bootstrap();
+        b.group(group).channel(NioDatagramChannel.class)
+                .option(ChannelOption.SO_BROADCAST, true)
+                .handler(new ChannelInitializer<NioDatagramChannel>() {
+                    @Override
+                    protected void initChannel(NioDatagramChannel channel) {
+                        channel.pipeline()
+                                .addLast(new DiscoveryClientInHandler())
+                                .addLast(new ClientHandler());
+                    }
+                });
+        ChannelFuture channelFuture =
+                b.bind(ConfigContextHolder.config().getBroadPort()).sync().channel().closeFuture();
+
+        channelFuture.addListener((ChannelFutureListener) future -> {
+            if (future.isSuccess()) {
+                // 绑定成功
+                System.out.println("Server started on port " + ConfigContextHolder.config().getBroadPort());
+            } else {
+                // 绑定失败
+                System.err.println("Server failed to start on port " + ConfigContextHolder.config().getBroadPort());
+                future.cause().printStackTrace();
+            }
+        });
     }
 
     private void bind(ServerBootstrap serverBootstrap, int port) {
         serverBootstrap.bind(port).addListener((future -> {
             if (future.isSuccess()) {
-                System.out.printf("端口%s绑定成功%n", port);
+                log.info("端口%s绑定成功:{}", port);
                 GlobalEnvironmentContext.server().bindPort(port);
             } else {
-                System.out.printf("端口%s绑定失败%n", port);
+                log.warn("端口%s绑定失败:{}", port);
                 bind(serverBootstrap, port + 1);
             }
         }));

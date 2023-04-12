@@ -1,10 +1,10 @@
 package com.wen.open.miniim.common.handler;
 
+import com.wen.open.miniim.common.context.ConfigContextHolder;
 import com.wen.open.miniim.common.context.Constant;
 import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
 import com.wen.open.miniim.common.protocol.BroadcastPacket;
 import com.wen.open.miniim.common.protocol.PacketCodeC;
-import com.wen.open.miniim.common.util.ConfigContextHolder;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 public class DiscoveryClientInHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
+        GlobalEnvironmentContext.hungChannel.add(ctx.channel());
         //开启广播
         holdBroad(ctx);
     }
@@ -40,8 +41,10 @@ public class DiscoveryClientInHandler extends ChannelInboundHandlerAdapter {
         broadcastPacket.setHostname(hostname);
         broadcastPacket.setServerPort(GlobalEnvironmentContext.server().port());
         ctx.executor().scheduleAtFixedRate(() -> {
-            ctx.writeAndFlush(new DatagramPacket(encode(broadcastPacket), new InetSocketAddress(Constant.BROADCAST_IP,
-                    ConfigContextHolder.config().getBroadPort())));
+            if (GlobalEnvironmentContext.broad) {
+                ctx.writeAndFlush(new DatagramPacket(encode(broadcastPacket), new InetSocketAddress(Constant.BROADCAST_IP,
+                        ConfigContextHolder.config().getBroadPort())));
+            }
         }, 0, ConfigContextHolder.config().getBroadDuration(), TimeUnit.SECONDS);
     }
 

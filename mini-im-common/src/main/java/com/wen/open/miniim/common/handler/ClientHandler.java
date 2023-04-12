@@ -10,11 +10,8 @@ import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.socket.DatagramPacket;
-import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -26,12 +23,13 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
-        log.info("======================online-list========================");
-        for (Map.Entry<String, BroadcastPacket> entry : GlobalEnvironmentContext.onlineMap.entrySet()) {
-            log.info("ip:{}", entry.getKey());
-            log.info("hostname:{}", entry.getValue().getHostname());
-            log.info("serverPort:{}", entry.getValue().getServerPort());
-        }
+//        log.info("======================online-list========================");
+//        for (Map.Entry<String, BroadcastPacket> entry : GlobalEnvironmentContext.onlineMap.entrySet()) {
+//            log.info("ip:{}", entry.getKey());
+//            log.info("hostname:{}", entry.getValue().getHostname());
+//            log.info("serverPort:{}", entry.getValue().getServerPort());
+//        }
+        GlobalEnvironmentContext.hungChannel.add(ctx.channel());
         DatagramPacket packet = (DatagramPacket) msg;
         ByteBuf byteBuf = packet.copy().content();
         Packet data = PacketCodeC.INSTANCE.decode(byteBuf);

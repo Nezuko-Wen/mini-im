@@ -1,8 +1,10 @@
-package com.wen.open.miniim.common.context;
+package com.wen.open.miniim.common.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+
+import javax.annotation.PreDestroy;
 
 /**
  * @author Wen
@@ -11,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "config")
 @Data
-public class ConfigContext {
+public class ImConfig {
 
     private String defaultHostname;
 
