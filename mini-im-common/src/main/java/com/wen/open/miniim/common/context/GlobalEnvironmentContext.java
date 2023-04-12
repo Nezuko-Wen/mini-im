@@ -57,10 +57,10 @@ public class GlobalEnvironmentContext {
                     //保持心跳
                     .option(ChannelOption.SO_KEEPALIVE, true)
                     //开启Nagle算法，要求高实时性关闭，减少网络交互次数开启
-                    .option(ChannelOption.TCP_NODELAY, true)
-                    .handler(new ClientConnInitializer(currentIp.get()));
+                    .option(ChannelOption.TCP_NODELAY, true);
             GlobalEnvironmentContext.clientBoot = bootstrap;
         }
+        clientBoot.handler(new ClientConnInitializer(currentIp.get()));
         return clientBoot;
     }
 
