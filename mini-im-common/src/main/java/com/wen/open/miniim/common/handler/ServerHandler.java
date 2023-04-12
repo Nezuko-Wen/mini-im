@@ -1,7 +1,6 @@
 package com.wen.open.miniim.common.handler;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
@@ -13,7 +12,6 @@ import java.util.Date;
  * @author Wen
  * @date 2023/4/12 18:21
  */
-@ChannelHandler.Sharable
 public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
