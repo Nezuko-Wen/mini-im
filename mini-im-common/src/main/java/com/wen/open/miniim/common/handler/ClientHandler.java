@@ -51,7 +51,7 @@ public class ClientHandler extends ChannelInboundHandlerAdapter {
         while (true) {
             if (GlobalEnvironmentContext.liveChannel.containsKey(ip)) {
                 GlobalEnvironmentContext.liveChannel.get(ip)
-                        .writeAndFlush(LogTestUtil.write(ip + " 我收到你的信息了!"));
+                        .writeAndFlush(LogTestUtil.write("mac" + ip + " 我收到你的信息了!"));
                 break;
             }
         }

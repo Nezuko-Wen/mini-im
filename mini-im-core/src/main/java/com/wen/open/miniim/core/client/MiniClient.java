@@ -3,22 +3,18 @@ package com.wen.open.miniim.core.client;
 import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
 import com.wen.open.miniim.common.handler.ClientHandler;
 import com.wen.open.miniim.common.handler.DiscoveryClientInHandler;
+import com.wen.open.miniim.common.handler.ServerHandler;
 import com.wen.open.miniim.common.packentity.ServerBoot;
 import com.wen.open.miniim.common.util.ConfigContextHolder;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import org.springframework.stereotype.Component;
-
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
 
 /**
  * @author Wen
@@ -33,17 +29,17 @@ public class MiniClient {
 
     private void connectService() {
         ServerBoot serverBoot = new ServerBoot();
-        NioEventLoopGroup boss = new NioEventLoopGroup();
+        NioEventLoopGroup boss = new NioEventLoopGroup(1);
         NioEventLoopGroup worker = new NioEventLoopGroup();
         serverBoot.group(boss, worker).channel(NioServerSocketChannel.class)
-                .childHandler(new ChannelInboundHandlerAdapter() {
+                .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     //服务器读写数据过程中的逻辑
-
                     @Override
-                    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
-                        ByteBuf byteBuf = (ByteBuf) msg;
-                        System.out.println(new Date() + ": 服务端读到数据 -> " + byteBuf.toString(StandardCharsets.UTF_8));
+                    protected void initChannel(NioSocketChannel channel) throws Exception {
+                        channel.pipeline().addLast(new ServerHandler());
                     }
+
+
                 });
         //服务器启动过程中的逻辑
         serverBoot.handler(new ChannelInitializer<NioServerSocketChannel>() {

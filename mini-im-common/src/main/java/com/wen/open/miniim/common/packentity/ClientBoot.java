@@ -23,7 +23,7 @@ public class ClientBoot extends Bootstrap {
         }
         bootstrap.connect(host, port).addListener(future -> {
             if (future.isSuccess()) {
-                System.out.println("连接成功!");
+                System.out.println(host + ":连接成功!");
             } else if (retry == 0) {
                 System.err.println("重试次数已用完，放弃连接！");
             } else { // 第几次重连
