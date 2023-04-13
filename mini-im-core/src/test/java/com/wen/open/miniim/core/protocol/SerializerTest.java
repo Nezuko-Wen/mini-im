@@ -15,6 +15,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class SerializerTest {
     @Test
     public void beanTest() {
-        System.out.println(ConfigContextHolder.config().getDefaultHostname());
+        System.out.println(ConfigContextHolder.config());
     }
 }

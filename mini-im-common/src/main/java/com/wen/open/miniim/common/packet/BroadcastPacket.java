@@ -1,4 +1,4 @@
-package com.wen.open.miniim.common.protocol;
+package com.wen.open.miniim.common.packet;
 
 import lombok.Data;
 

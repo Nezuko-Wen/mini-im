@@ -2,20 +2,17 @@ package com.wen.open.miniim.core.client;
 
 import com.wen.open.miniim.common.context.ConfigContextHolder;
 import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
-import com.wen.open.miniim.common.handler.ClientHandler;
-import com.wen.open.miniim.common.handler.DiscoveryClientInHandler;
-import com.wen.open.miniim.common.handler.ServerHandler;
+import com.wen.open.miniim.common.handler.broad.DiscoveryInitializer;
+import com.wen.open.miniim.common.handler.server.ServerChildInitializer;
 import com.wen.open.miniim.common.packentity.ServerBoot;
+import io.netty.bootstrap.AbstractBootstrap;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
-import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -26,8 +23,10 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class MiniClient {
-    public void startUdp() throws Exception {
+    public void startUdp() {
+        //开启服务端口
         connectService();
+        //开始传播发现其他客户端
         discoveryService();
     }
 
@@ -36,22 +35,13 @@ public class MiniClient {
         NioEventLoopGroup boss = new NioEventLoopGroup(1);
         NioEventLoopGroup worker = new NioEventLoopGroup();
         serverBoot.group(boss, worker).channel(NioServerSocketChannel.class)
-                .childHandler(new ChannelInitializer<NioSocketChannel>() {
-                    //服务器读写数据过程中的逻辑
-                    @Override
-                    protected void initChannel(NioSocketChannel channel) throws Exception {
-                        channel.pipeline().addLast(new ServerHandler());
-                    }
-
-
-                });
+                .childHandler(new ServerChildInitializer());
         //服务器启动过程中的逻辑
         serverBoot.handler(new ChannelInitializer<NioServerSocketChannel>() {
             @Override
             protected void initChannel(NioServerSocketChannel ch) {
                 log.info("服务端启动中");
             }
-
         });
         //给连接设置tcp属性
         serverBoot.childOption(ChannelOption.SO_KEEPALIVE, true)//开启心跳
@@ -62,43 +52,39 @@ public class MiniClient {
         bind(serverBoot, ConfigContextHolder.config().getServerPort());
     }
 
-    private void discoveryService() throws InterruptedException {
+    private void discoveryService() {
         NioEventLoopGroup group = new NioEventLoopGroup();
         Bootstrap b = new Bootstrap();
         b.group(group).channel(NioDatagramChannel.class)
                 .option(ChannelOption.SO_BROADCAST, true)
-                .handler(new ChannelInitializer<NioDatagramChannel>() {
-                    @Override
-                    protected void initChannel(NioDatagramChannel channel) {
-                        channel.pipeline()
-                                .addLast(new DiscoveryClientInHandler())
-                                .addLast(new ClientHandler());
-                    }
-                });
-        ChannelFuture channelFuture =
-                b.bind(ConfigContextHolder.config().getBroadPort()).sync().channel().closeFuture();
-
-        channelFuture.addListener((ChannelFutureListener) future -> {
-            if (future.isSuccess()) {
-                // 绑定成功
-                System.out.println("Server started on port " + ConfigContextHolder.config().getBroadPort());
-            } else {
-                // 绑定失败
-                System.err.println("Server failed to start on port " + ConfigContextHolder.config().getBroadPort());
-                future.cause().printStackTrace();
-            }
-        });
+                .handler(new DiscoveryInitializer());
+        bind(b, ConfigContextHolder.config().getBroadPort());
     }
 
-    private void bind(ServerBootstrap serverBootstrap, int port) {
-        serverBootstrap.bind(port).addListener((future -> {
-            if (future.isSuccess()) {
-                log.info("端口%s绑定成功:{}", port);
-                GlobalEnvironmentContext.server().bindPort(port);
-            } else {
-                log.warn("端口%s绑定失败:{}", port);
-                bind(serverBootstrap, port + 1);
-            }
-        }));
+    private void bind(AbstractBootstrap bootstrap, int port) {
+        if (bootstrap instanceof ServerBootstrap) {
+            ServerBootstrap tar = (ServerBootstrap) bootstrap;
+            tar.bind(port).addListener((future -> {
+                if (future.isSuccess()) {
+                    log.info("端口%s绑定成功:{}", port);
+                    GlobalEnvironmentContext.server().bindPort(port);
+                } else {
+                    log.warn("端口%s绑定失败:{}", port);
+                    bind(tar, port + 1);
+                }
+            }));
+        } else if (bootstrap instanceof Bootstrap){
+            Bootstrap tar = (Bootstrap) bootstrap;
+            tar.bind(port).addListener((future -> {
+                if (future.isSuccess()) {
+                    log.info("端口%s绑定成功:{}", port);
+                } else {
+                    log.warn("无法传播:{}", port);
+                    System.exit(0);
+                }
+            }));
+        } else {
+            throw new RuntimeException("未知BootStrap模型");
+        }
     }
 }

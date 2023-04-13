@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class ClientBoot extends Bootstrap {
 
-    public void connect(int port, String host) {
+    public void tryConnect(String host, int port) {
         connect(this, host, port, 5);
     }
 
@@ -25,9 +25,9 @@ public class ClientBoot extends Bootstrap {
         }
         bootstrap.connect(host, port).addListener(future -> {
             if (future.isSuccess()) {
-                log.info(host + ":连接成功!");
+                log.info("目标服务器:" + host + " Success!");
             } else if (retry == 0) {
-                log.error("重试次数已用完，放弃连接！");
+                log.error("目标服务器:" + host + " Fail!");
             } else { // 第几次重连
                 int order = (5 - retry) + 1; // 本次重连的间隔
                 int delay = 1 << order;

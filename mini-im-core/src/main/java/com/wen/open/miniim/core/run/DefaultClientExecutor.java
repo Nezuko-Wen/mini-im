@@ -4,7 +4,6 @@ import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
 import com.wen.open.miniim.common.util.TaskExecutorUtil;
 import com.wen.open.miniim.core.client.MiniClient;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;
 
@@ -33,21 +32,17 @@ public class DefaultClientExecutor {
 //        scanStart();
     }
 
+
     private void scanStart() {
-        TaskExecutorUtil.scheduleAtFixedRate(()->{}, 2L,2L, TimeUnit.MINUTES);
+        TaskExecutorUtil.scheduleAtFixedRate(() -> {
+        }, 2L, 2L, TimeUnit.MINUTES);
     }
 
     @PreDestroy
     public void destroy() {
-        GlobalEnvironmentContext.broad = false;
-//        GlobalEnvironmentContext.hungChannel.forEach(c->{
-//            try {
-//                c.closeFuture().sync();
-//            } catch (InterruptedException e) {
-//                throw new RuntimeException(e);
-//            }
-//        });
-        System.out.println("我销毁了");
+        GlobalEnvironmentContext.stopBroad();
+        GlobalEnvironmentContext.close();
+        log.info("我销毁了");
     }
 
 }

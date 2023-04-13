@@ -1,6 +1,5 @@
-package com.wen.open.miniim.common.handler;
+package com.wen.open.miniim.common.handler.server;
 
-import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -18,7 +17,7 @@ import java.util.Date;
 public class ServerHandler extends ChannelInboundHandlerAdapter {
 
     @Override
-    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+    public void channelRead(ChannelHandlerContext ctx, Object msg) {
         InetSocketAddress clientAddress = (InetSocketAddress) ctx.channel().remoteAddress();
         String clientIP = clientAddress.getAddress().getHostAddress();
         ByteBuf byteBuf = (ByteBuf) msg;

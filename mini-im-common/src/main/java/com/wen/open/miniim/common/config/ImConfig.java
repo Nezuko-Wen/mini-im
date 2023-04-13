@@ -4,8 +4,6 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-import javax.annotation.PreDestroy;
-
 /**
  * @author Wen
  * @date 2023/4/11 11:15
@@ -14,8 +12,6 @@ import javax.annotation.PreDestroy;
 @ConfigurationProperties(prefix = "config")
 @Data
 public class ImConfig {
-
-    private String defaultHostname;
 
     private Long broadDuration;
 
