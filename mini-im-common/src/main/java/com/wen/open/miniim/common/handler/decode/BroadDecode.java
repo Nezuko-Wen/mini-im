@@ -1,7 +1,7 @@
 package com.wen.open.miniim.common.handler.decode;
 
+import com.wen.open.miniim.common.context.ConfigContextHolder;
 import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
-import com.wen.open.miniim.common.packet.BroadcastPacket;
 import com.wen.open.miniim.common.protocol.PacketCodeC;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
@@ -15,7 +15,6 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -28,12 +27,12 @@ public class BroadDecode extends MessageToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, Object o, List list) {
-        log.info("======================online-list========================");
-        for (Map.Entry<String, BroadcastPacket> entry : GlobalEnvironmentContext.onlineMap.entrySet()) {
-            log.info("ip:{}", entry.getKey());
-            log.info("hostname:{}", entry.getValue().getHostname());
-            log.info("serverPort:{}", entry.getValue().getServerPort());
-        }
+//        log.info("======================online-list========================");
+//        for (Map.Entry<String, BroadcastPacket> entry : GlobalEnvironmentContext.onlineMap.entrySet()) {
+//            log.info("ip:{}", entry.getKey());
+//            log.info("hostname:{}", entry.getValue().getHostname());
+//            log.info("serverPort:{}", entry.getValue().getServerPort());
+//        }
         DatagramPacket packet = (DatagramPacket) o;
         if (validate(ctx, packet)) {
             String ip = String.valueOf(packet.sender()).replace("/", "").split(":")[0];
@@ -44,6 +43,9 @@ public class BroadDecode extends MessageToMessageDecoder {
     }
 
     private boolean validate(ChannelHandlerContext ctx, DatagramPacket packet) {
+        if (ConfigContextHolder.config().getSkipElse()) {
+            return true;
+        }
         String ip = String.valueOf(packet.sender()).replace("/", "").split(":")[0];
         if (localAddress == null) {
             Enumeration<NetworkInterface> interfaces;
@@ -65,7 +67,6 @@ public class BroadDecode extends MessageToMessageDecoder {
                 throw new RuntimeException(e);
             }
         }
-//        return true;
         return !Objects.equals(ip, localAddress);
     }
 }
