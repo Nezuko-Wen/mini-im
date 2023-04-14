@@ -18,7 +18,7 @@ public class PacketCodeC {
     public static final PacketCodeC INSTANCE = new PacketCodeC();
 
     //代表是mini-im制定的协议
-    private static final int MAGIC_NUMBER = 0xabcd5783;
+    public static final int MAGIC_NUMBER = 0xabcd5783;
 
     private static final Map<Byte, Class<? extends Packet>> packetTypeMap;
     private static final Map<Byte, Serializer> serializerMap;
@@ -61,10 +61,7 @@ public class PacketCodeC {
 
 
     public Packet decode(ByteBuf byteBuf) {
-        //协议魔术校验
-        if (byteBuf.readableBytes() < 4 || byteBuf.readInt() != MAGIC_NUMBER) {
-            return null;
-        }
+        byteBuf.skipBytes(4);
         //跳过协议版本
         byteBuf.skipBytes(1);
         //获取序列化算法

@@ -16,9 +16,6 @@ public class PacketDecode extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext channelHandlerContext, ByteBuf byteBuf, List<Object> list) throws Exception {
-        Packet decode = PacketCodeC.INSTANCE.decode(byteBuf);
-        if (decode != null) {
-            list.add(decode);
-        }
+        list.add(PacketCodeC.INSTANCE.decode(byteBuf));
     }
 }
