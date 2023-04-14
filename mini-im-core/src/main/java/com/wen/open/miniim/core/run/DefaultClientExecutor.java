@@ -40,9 +40,8 @@ public class DefaultClientExecutor {
 
     @PreDestroy
     public void destroy() {
-        GlobalEnvironmentContext.stopBroad();
         GlobalEnvironmentContext.close();
-        log.info("我销毁了");
+        log.info("im已成功停止");
     }
 
 }

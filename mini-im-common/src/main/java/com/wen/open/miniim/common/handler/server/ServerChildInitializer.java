@@ -1,5 +1,6 @@
 package com.wen.open.miniim.common.handler.server;
 
+import com.wen.open.miniim.common.handler.command.MessageHandler;
 import com.wen.open.miniim.common.handler.command.OnlineHandler;
 import com.wen.open.miniim.common.handler.decode.PacketDecode;
 import com.wen.open.miniim.common.handler.encode.PacketEncode;
@@ -19,6 +20,7 @@ public class ServerChildInitializer extends ChannelInitializer<NioSocketChannel>
                 .addLast(new PacketDecode())
                 //接受客户端的连接信息
                 .addLast(new OnlineHandler())
+                .addLast(new MessageHandler())
                 .addLast(new PacketEncode());
     }
 }

@@ -51,6 +51,7 @@ public class GlobalEnvironmentContext {
         try {
             localhost = String.valueOf(InetAddress.getLocalHost());
         } catch (UnknownHostException e) {
+            log.warn("获取主机名异常", e);
             localhost = "UNKNOWN";
         }
     }
@@ -61,10 +62,6 @@ public class GlobalEnvironmentContext {
 
     public static ServerBoot server() {
         return serverBoot;
-    }
-
-    public static void clientLive(ClientBoot boot) {
-        GlobalEnvironmentContext.clientBoot = boot;
     }
 
     public static ClientBoot client() {
@@ -95,7 +92,9 @@ public class GlobalEnvironmentContext {
     }
 
     public static void close() {
+        stopBroad();
         //关闭通道
+
 
     }
     public static void register(BroadcastPacket broadPacket) {

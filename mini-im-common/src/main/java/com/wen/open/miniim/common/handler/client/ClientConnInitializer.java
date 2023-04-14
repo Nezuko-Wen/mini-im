@@ -2,6 +2,7 @@ package com.wen.open.miniim.common.handler.client;
 
 import com.wen.open.miniim.common.handler.command.MessageHandler;
 import com.wen.open.miniim.common.handler.decode.PacketDecode;
+import com.wen.open.miniim.common.handler.encode.PacketEncode;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
@@ -30,6 +31,7 @@ public class ClientConnInitializer extends ChannelInitializer<SocketChannel> {
         channel.pipeline()
                 .addLast(new ConnHandler())
                 .addLast(new PacketDecode())
-                .addLast(new MessageHandler());
+                .addLast(new MessageHandler())
+                .addLast(new PacketEncode());
     }
 }

@@ -3,6 +3,8 @@ spring:
     name: mini-im
   profiles:
     active: '@activatedProperties@'
+  banner:
+    location: banner.txt
 logging:
   level:
     .*: info
