@@ -6,6 +6,7 @@ import com.wen.open.miniim.common.handler.encode.PacketEncode;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.SocketChannel;
+import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,6 +31,7 @@ public class ClientConnInitializer extends ChannelInitializer<SocketChannel> {
         context.attr(AttributeKey.valueOf("ip")).set(this.ip);
         channel.pipeline()
                 .addLast(new ConnHandler())
+                .addLast(new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 7, 4))
                 .addLast(new PacketDecode())
                 .addLast(new MessageHandler())
                 .addLast(new PacketEncode());

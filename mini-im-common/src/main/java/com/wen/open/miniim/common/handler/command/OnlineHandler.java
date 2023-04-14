@@ -17,5 +17,11 @@ public class OnlineHandler extends CommandHandler<OnlinePacket> {
         MessagePacket messagePacket = new MessagePacket();
         messagePacket.setMsg("欢迎你");
         ctx.channel().writeAndFlush(messagePacket);
+        for (int i = 0; i < 10; i ++) {
+            MessagePacket messagePacket1 = new MessagePacket();
+            messagePacket1.setMsg(i + "其中，第一个参数指的是数据包的最大长度，第二个参数指的是长度域的偏移量，第三个参数指的是长度域的 长度，这样一个拆包器写好之后，只需要在 pipeline " +
+                    "的最前面加上这个拆包器。");
+            ctx.channel().writeAndFlush(messagePacket1);
+        }
     }
 }
