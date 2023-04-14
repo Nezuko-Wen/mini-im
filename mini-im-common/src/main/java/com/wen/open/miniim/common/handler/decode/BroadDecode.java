@@ -9,8 +9,14 @@ import io.netty.channel.socket.DatagramPacket;
 import io.netty.handler.codec.MessageToMessageDecoder;
 import lombok.extern.slf4j.Slf4j;
 
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author Wen
@@ -18,9 +24,10 @@ import java.util.Map;
  */
 @Slf4j
 public class BroadDecode extends MessageToMessageDecoder {
+    private String localAddress;
 
     @Override
-    protected void decode(ChannelHandlerContext channelHandlerContext, Object o, List list) {
+    protected void decode(ChannelHandlerContext ctx, Object o, List list) {
         log.info("======================online-list========================");
         for (Map.Entry<String, BroadcastPacket> entry : GlobalEnvironmentContext.onlineMap.entrySet()) {
             log.info("ip:{}", entry.getKey());
@@ -28,8 +35,37 @@ public class BroadDecode extends MessageToMessageDecoder {
             log.info("serverPort:{}", entry.getValue().getServerPort());
         }
         DatagramPacket packet = (DatagramPacket) o;
-        ByteBuf byteBuf = packet.copy().content();
-        GlobalEnvironmentContext.ip(String.valueOf(packet.sender()).replace("/", "").split(":")[0]);
-        list.add(PacketCodeC.INSTANCE.decode(byteBuf));
+        if (validate(ctx, packet)) {
+            String ip = String.valueOf(packet.sender()).replace("/", "").split(":")[0];
+            ByteBuf byteBuf = packet.copy().content();
+            GlobalEnvironmentContext.ip(ip);
+            list.add(PacketCodeC.INSTANCE.decode(byteBuf));
+        }
+    }
+
+    private boolean validate(ChannelHandlerContext ctx, DatagramPacket packet) {
+        String ip = String.valueOf(packet.sender()).replace("/", "").split(":")[0];
+        if (localAddress == null) {
+            Enumeration<NetworkInterface> interfaces;
+            try {
+                interfaces = NetworkInterface.getNetworkInterfaces();
+                while (interfaces.hasMoreElements()) {
+                    NetworkInterface networkInterface = interfaces.nextElement();
+                    if (networkInterface.isUp() && !networkInterface.isLoopback()) {
+                        Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+                        while (addresses.hasMoreElements()) {
+                            InetAddress address = addresses.nextElement();
+                            if (address instanceof Inet4Address) {
+                                localAddress = address.getHostAddress();
+                            }
+                        }
+                    }
+                }
+            } catch (SocketException e) {
+                throw new RuntimeException(e);
+            }
+        }
+//        return true;
+        return !Objects.equals(ip, localAddress);
     }
 }

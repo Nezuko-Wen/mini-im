@@ -10,6 +10,7 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
  * @date 2023/4/13 10:15
  */
 public class DiscoveryInitializer extends ChannelInitializer<NioDatagramChannel> {
+
     @Override
     protected void initChannel(NioDatagramChannel channel) {
         channel.pipeline()
