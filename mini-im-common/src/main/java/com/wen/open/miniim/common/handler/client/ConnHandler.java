@@ -2,7 +2,6 @@ package com.wen.open.miniim.common.handler.client;
 
 import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
 import com.wen.open.miniim.common.packet.MessagePacket;
-import com.wen.open.miniim.common.packet.OnlinePacket;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -17,20 +16,14 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date 2023/4/13 15:28
  */
 public class ConnHandler extends ChannelInboundHandlerAdapter {
-    public static final Map<String, Channel> liveChannel = new ConcurrentHashMap<>();
-
-
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        String ip = (String) ctx.attr(AttributeKey.valueOf("ip")).get();
-        OnlinePacket packet = new OnlinePacket();
-        packet.setOnline(GlobalEnvironmentContext.localhost() + "- 上线了");
+        String ip = (String) ctx.attr(
+                AttributeKey.valueOf("ip")).get();
         GlobalEnvironmentContext.liveChannel.putIfAbsent(ip, ctx.channel());
-        ctx.channel().writeAndFlush(packet);
         startConsoleThread(ctx.channel());
 
     }
-
     private void startConsoleThread(Channel channel) {
         new Thread(() -> {
             while (!Thread.interrupted()) {
@@ -43,5 +36,4 @@ public class ConnHandler extends ChannelInboundHandlerAdapter {
             }
         }).start();
     }
-
 }

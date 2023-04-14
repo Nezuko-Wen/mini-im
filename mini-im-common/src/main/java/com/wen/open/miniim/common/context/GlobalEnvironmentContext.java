@@ -4,6 +4,7 @@ import com.wen.open.miniim.common.handler.client.ClientConnInitializer;
 import com.wen.open.miniim.common.packentity.ClientBoot;
 import com.wen.open.miniim.common.packentity.ServerBoot;
 import com.wen.open.miniim.common.packet.BroadcastPacket;
+import com.wen.open.miniim.common.packet.MessagePacket;
 import com.wen.open.miniim.common.util.LogTestUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;
@@ -32,13 +33,8 @@ public class GlobalEnvironmentContext {
     //TODO 下线
     public static final Set<Channel> hungChannel = new CopyOnWriteArraySet<>();
 
-    private static final ThreadLocal<String> currentIp = new ThreadLocal<>();
-
-    private static final ThreadLocal<Integer> currentPort = new ThreadLocal<>();
 
     private static ServerBoot serverBoot;
-
-    private static ClientBoot clientBoot;
 
     private static volatile boolean broad = true;
 
@@ -56,13 +52,11 @@ public class GlobalEnvironmentContext {
         }
     }
 
-    public static void serverLive(ServerBoot boot) {
-        GlobalEnvironmentContext.serverBoot = boot;
-    }
+    private static final ThreadLocal<String> currentIp = new ThreadLocal<>();
 
-    public static ServerBoot server() {
-        return serverBoot;
-    }
+    private static ClientBoot clientBoot;
+
+    private static final ThreadLocal<Integer> currentPort = new ThreadLocal<>();
 
     public static ClientBoot client() {
         if (clientBoot == null) {
@@ -77,35 +71,24 @@ public class GlobalEnvironmentContext {
                     .option(ChannelOption.SO_KEEPALIVE, true)
                     //开启Nagle算法，要求高实时性关闭，减少网络交互次数开启
                     .option(ChannelOption.TCP_NODELAY, true);
-            GlobalEnvironmentContext.clientBoot = bootstrap;
+            clientBoot = bootstrap;
         }
         clientBoot.handler(new ClientConnInitializer(currentIp.get()));
         return clientBoot;
     }
 
-    public static boolean holdBroad() {
-        return broad;
-    }
-
-    public static void stopBroad() {
-        broad = false;
-    }
-
-    public static void close() {
-        stopBroad();
-        //关闭通道
-
-
-    }
     public static void register(BroadcastPacket broadPacket) {
         client().tryConnect(currentIp.get(), currentPort.get());
         String ip = currentIp.get();
         GlobalEnvironmentContext.onlineMap.putIfAbsent(ip, broadPacket);
-        while (true) {
-            if (GlobalEnvironmentContext.liveChannel.containsKey(ip)) {
-                GlobalEnvironmentContext.liveChannel.get(ip)
-                        .writeAndFlush(LogTestUtil.write("mac" + ip + " 我收到你的信息了!"));
-                break;
+        if (!liveChannel.containsKey(ip)) {
+            while (true) {
+                if (liveChannel.containsKey(ip)) {
+                    MessagePacket messagePacket = new MessagePacket();
+                    messagePacket.setMsg(localhost + " 我收到你的广播了!");
+                    liveChannel.get(ip).writeAndFlush(messagePacket);
+                    break;
+                }
             }
         }
         clear();
@@ -123,7 +106,28 @@ public class GlobalEnvironmentContext {
     public static void port(Integer port) {
         currentPort.set(port);
     }
+    public static void serverLive(ServerBoot boot) {
+        GlobalEnvironmentContext.serverBoot = boot;
+    }
 
+    public static ServerBoot server() {
+        return serverBoot;
+    }
+
+    public static boolean holdBroad() {
+        return broad;
+    }
+
+    public static void stopBroad() {
+        broad = false;
+    }
+
+    public static void close() {
+        stopBroad();
+        //关闭通道
+
+
+    }
     public static String localhost() {
         return localhost;
     }

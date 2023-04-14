@@ -18,7 +18,6 @@ public class ClientBoot extends Bootstrap {
         connect(this, host, port, 5);
     }
 
-
     private synchronized void connect(Bootstrap bootstrap, String host, int port, int retry) {
         if (GlobalEnvironmentContext.liveChannel.containsKey(host)) {
             return;
