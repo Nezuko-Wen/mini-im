@@ -4,6 +4,7 @@ import com.wen.open.miniim.common.handler.client.ClientConnInitializer;
 import com.wen.open.miniim.common.packentity.ClientBoot;
 import com.wen.open.miniim.common.packentity.ServerBoot;
 import com.wen.open.miniim.common.packet.BroadcastPacket;
+import com.wen.open.miniim.common.packet.ClosePacket;
 import com.wen.open.miniim.common.packet.MessagePacket;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;
@@ -128,7 +129,15 @@ public class GlobalEnvironmentContext {
         stopBroad();
         //关闭通道
         try {
-            hungChannel.forEach(ChannelOutboundInvoker::close);
+            hungChannel.forEach(channel -> {
+                Object ip = channel.attr(AttributeKey.valueOf("ip")).get();
+                if ( ip != null) {
+                    ClosePacket closePacket = new ClosePacket();
+                    closePacket.setIp((String) ip);
+                    channel.writeAndFlush(closePacket);
+                }
+                channel.close();
+            });
         } finally {
             serverBoot.config().group().shutdownGracefully();
             serverBoot.config().childGroup().shutdownGracefully();

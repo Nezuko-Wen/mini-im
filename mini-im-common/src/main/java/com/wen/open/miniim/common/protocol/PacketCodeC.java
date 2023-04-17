@@ -28,6 +28,7 @@ public class PacketCodeC {
         packetTypeMap.put(Command.ONLINE.getVal(), OnlinePacket.class);
         packetTypeMap.put(Command.BROADCAST.getVal(), BroadcastPacket.class);
         packetTypeMap.put(Command.MESSAGE.getVal(), MessagePacket.class);
+        packetTypeMap.put(Command.CLOSE.getVal(), ClosePacket.class);
 
         serializerMap = new HashMap<>();
         Serializer jsonSerializer = new JSONSerializer();

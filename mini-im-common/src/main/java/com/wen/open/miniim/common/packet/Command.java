@@ -14,6 +14,7 @@ public enum Command {
     ONLINE((byte) 0x01),
     BROADCAST((byte) 0x02),
     MESSAGE((byte) 0x03),
+    CLOSE((byte) 0x04)
     ;
 
     private final Byte val;

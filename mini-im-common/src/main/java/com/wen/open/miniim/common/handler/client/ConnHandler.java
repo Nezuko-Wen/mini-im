@@ -16,8 +16,7 @@ import java.util.Scanner;
 public class ConnHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        String ip = (String) ctx.attr(
-                AttributeKey.valueOf("ip")).get();
+        String ip = (String) ctx.attr(AttributeKey.valueOf("ip")).get();
         GlobalEnvironmentContext.liveChannel.putIfAbsent(ip, ctx.channel());
         startConsoleThread(ctx.channel());
         GlobalEnvironmentContext.hungChannel.add(ctx.channel());
