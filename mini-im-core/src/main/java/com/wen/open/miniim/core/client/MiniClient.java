@@ -8,6 +8,7 @@ import com.wen.open.miniim.common.packentity.ServerBoot;
 import io.netty.bootstrap.AbstractBootstrap;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
+import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -64,20 +65,22 @@ public class MiniClient {
     private void bind(AbstractBootstrap bootstrap, int port) {
         if (bootstrap instanceof ServerBootstrap) {
             ServerBootstrap tar = (ServerBootstrap) bootstrap;
-            tar.bind(port).addListener((future -> {
+            tar.bind(port).addListener((ChannelFutureListener) future -> {
                 if (future.isSuccess()) {
                     log.info("端口%s绑定成功:{}", port);
                     GlobalEnvironmentContext.server().bindPort(port);
+                    GlobalEnvironmentContext.hungChannel.add(future.channel());
                 } else {
                     log.warn("端口%s绑定失败:{}", port);
                     bind(tar, port + 1);
                 }
-            }));
+            });
         } else if (bootstrap instanceof Bootstrap){
             Bootstrap tar = (Bootstrap) bootstrap;
-            tar.bind(port).addListener((future -> {
+            tar.bind(port).addListener(((ChannelFutureListener)future -> {
                 if (future.isSuccess()) {
                     log.info("端口%s绑定成功:{}", port);
+                    GlobalEnvironmentContext.hungChannel.add(future.channel());
                 } else {
                     log.warn("无法传播:{}", port);
                     System.exit(0);

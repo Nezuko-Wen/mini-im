@@ -20,7 +20,7 @@ public class ConnHandler extends ChannelInboundHandlerAdapter {
                 AttributeKey.valueOf("ip")).get();
         GlobalEnvironmentContext.liveChannel.putIfAbsent(ip, ctx.channel());
         startConsoleThread(ctx.channel());
-
+        GlobalEnvironmentContext.hungChannel.add(ctx.channel());
     }
     private void startConsoleThread(Channel channel) {
         new Thread(() -> {

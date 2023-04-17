@@ -7,8 +7,10 @@ import com.wen.open.miniim.common.packet.BroadcastPacket;
 import com.wen.open.miniim.common.packet.MessagePacket;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;
+import io.netty.channel.ChannelOutboundInvoker;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetAddress;
@@ -122,10 +124,15 @@ public class GlobalEnvironmentContext {
     }
 
     public static void close() {
+        //先停止传播
         stopBroad();
         //关闭通道
-
-
+        try {
+            hungChannel.forEach(ChannelOutboundInvoker::close);
+        } finally {
+            serverBoot.config().group().shutdownGracefully();
+            serverBoot.config().childGroup().shutdownGracefully();
+        }
     }
     public static String localhost() {
         return localhost;
