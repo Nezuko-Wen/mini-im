@@ -2,12 +2,9 @@ package com.wen.open.miniim.common.handler.decode;
 
 import com.wen.open.miniim.common.protocol.PacketCodeC;
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import lombok.extern.slf4j.Slf4j;
-
-import java.net.SocketAddress;
 
 
 /**

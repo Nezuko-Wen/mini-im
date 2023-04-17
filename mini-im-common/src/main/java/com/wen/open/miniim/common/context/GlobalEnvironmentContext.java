@@ -5,7 +5,6 @@ import com.wen.open.miniim.common.packentity.ClientBoot;
 import com.wen.open.miniim.common.packentity.ServerBoot;
 import com.wen.open.miniim.common.packet.BroadcastPacket;
 import com.wen.open.miniim.common.packet.MessagePacket;
-import com.wen.open.miniim.common.util.LogTestUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;

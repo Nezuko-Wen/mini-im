@@ -27,14 +27,8 @@ public class BroadDecode extends MessageToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, Object o, List list) {
-//        log.info("======================online-list========================");
-//        for (Map.Entry<String, BroadcastPacket> entry : GlobalEnvironmentContext.onlineMap.entrySet()) {
-//            log.info("ip:{}", entry.getKey());
-//            log.info("hostname:{}", entry.getValue().getHostname());
-//            log.info("serverPort:{}", entry.getValue().getServerPort());
-//        }
         DatagramPacket packet = (DatagramPacket) o;
-        if (validate(ctx, packet)) {
+        if (validate(packet)) {
             String ip = String.valueOf(packet.sender()).replace("/", "").split(":")[0];
             ByteBuf byteBuf = packet.copy().content();
             GlobalEnvironmentContext.ip(ip);
@@ -42,7 +36,7 @@ public class BroadDecode extends MessageToMessageDecoder {
         }
     }
 
-    private boolean validate(ChannelHandlerContext ctx, DatagramPacket packet) {
+    private boolean validate(DatagramPacket packet) {
         if (ConfigContextHolder.config().getSkipElse()) {
             return true;
         }
