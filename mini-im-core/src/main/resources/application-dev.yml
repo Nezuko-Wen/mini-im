@@ -3,4 +3,4 @@ config:
   broad-port: 10000
   server-port: 5783
   skip-else: true
-  file-split-length: 1024
+  file-split-length: 102400

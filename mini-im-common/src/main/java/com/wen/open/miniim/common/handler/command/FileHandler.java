@@ -1,5 +1,6 @@
 package com.wen.open.miniim.common.handler.command;
 
+import com.wen.open.miniim.common.context.ConfigContextHolder;
 import com.wen.open.miniim.common.entity.FileBase;
 import com.wen.open.miniim.common.entity.packet.FilePacket;
 import com.wen.open.miniim.common.entity.type.FileStatus;
@@ -37,7 +38,7 @@ public class FileHandler extends CommandHandler<FilePacket>{
                     File file = new File(fileBase.getFileUrl());
                     RandomAccessFile randomAccessFile = new RandomAccessFile(file, "r");//r: 只读模式 rw:读写模式
                     randomAccessFile.seek(fileBase.getReadPosition());
-                    byte[] bytes = new byte[1024 * 100];
+                    byte[] bytes = new byte[ConfigContextHolder.config().getFileSplitLength()];
                     int readSize = randomAccessFile.read(bytes);
                     if (readSize <= 0) {//文件已读完
                         randomAccessFile.close();
@@ -46,7 +47,7 @@ public class FileHandler extends CommandHandler<FilePacket>{
                     fileBase.setBeginPos(readPosition);
                     fileBase.setEndPos(readPosition + readSize);
                     //不足1024需要拷贝去掉空字节
-                    if (readSize < 1024 * 100) {
+                    if (readSize < ConfigContextHolder.config().getFileSplitLength()) {
                         byte[] copy = new byte[readSize];
                         System.arraycopy(bytes, 0, copy, 0, readSize);
                         fileBase.setBytes(copy);
