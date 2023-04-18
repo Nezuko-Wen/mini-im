@@ -12,6 +12,8 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 public class CloseHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        GlobalEnvironmentContext.onlineMap.remove(ParseUtil.ip(ctx.channel().remoteAddress()));
+        String clientIp = ParseUtil.ip(ctx.channel().remoteAddress());
+        GlobalEnvironmentContext.onlineMap.remove(clientIp);
+        GlobalEnvironmentContext.liveChannel.remove(clientIp);
     }
 }
