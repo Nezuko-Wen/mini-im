@@ -2,7 +2,6 @@ package com.wen.open.miniim.common.handler.decode;
 
 import com.wen.open.miniim.common.context.ConfigContextHolder;
 import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
-import com.wen.open.miniim.common.packentity.ClientInfo;
 import com.wen.open.miniim.common.protocol.PacketCodeC;
 import com.wen.open.miniim.common.util.ParseUtil;
 import io.netty.buffer.ByteBuf;
@@ -17,7 +16,6 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 /**

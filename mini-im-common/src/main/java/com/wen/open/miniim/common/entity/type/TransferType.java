@@ -8,5 +8,4 @@ public enum TransferType {
     REQUEST,//请求传输
     INSTRUCT,//传输指令
     DATA,//传输数据
-    ;
 }

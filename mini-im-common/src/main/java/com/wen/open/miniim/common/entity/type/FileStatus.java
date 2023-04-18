@@ -9,5 +9,4 @@ public enum FileStatus {
     CENTER,   //中间
     END,    //结尾
     COMPLETE, //完成
-    ;
 }

@@ -1,19 +1,16 @@
 package com.wen.open.miniim.core.run;
 
 import com.wen.open.miniim.StartApplication;
-import com.wen.open.miniim.common.context.ConfigContextHolder;
 import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
 import com.wen.open.miniim.common.entity.FileBase;
-import com.wen.open.miniim.common.entity.type.TransferType;
-import com.wen.open.miniim.common.packentity.ClientInfo;
 import com.wen.open.miniim.common.entity.packet.FilePacket;
 import com.wen.open.miniim.common.entity.packet.MessagePacket;
+import com.wen.open.miniim.common.entity.type.TransferType;
+import com.wen.open.miniim.common.packentity.ClientInfo;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.util.Map;
 import java.util.Scanner;
 
