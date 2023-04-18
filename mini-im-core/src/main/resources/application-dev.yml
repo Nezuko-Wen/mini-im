@@ -3,4 +3,3 @@ config:
   broad-port: 10000
   server-port: 5783
   skip-else: false
-  online-console: false

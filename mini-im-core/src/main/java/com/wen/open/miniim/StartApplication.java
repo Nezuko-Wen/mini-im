@@ -2,6 +2,7 @@ package com.wen.open.miniim;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 /**
  * @author Wen
@@ -9,7 +10,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 public class StartApplication {
+    private static ConfigurableApplicationContext context;
+
     public static void main(String[] args) {
-        SpringApplication.run(StartApplication.class, args);
+        context = SpringApplication.run(StartApplication.class, args);
+    }
+
+    public static void close() {
+        context.close();
     }
 }

@@ -41,7 +41,6 @@ public class DefaultClientExecutor {
     @PreDestroy
     public void destroy() {
         GlobalEnvironmentContext.close();
-        log.info("im已成功停止");
     }
 
 }

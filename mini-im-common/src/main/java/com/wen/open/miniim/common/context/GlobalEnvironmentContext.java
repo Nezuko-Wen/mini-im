@@ -48,6 +48,8 @@ public class GlobalEnvironmentContext {
 
     private static final ThreadLocal<Integer> currentPort = new ThreadLocal<>();
 
+    private static Thread consoleThread;
+
     static {
         try {
             localhost = String.valueOf(InetAddress.getLocalHost());
@@ -119,9 +121,13 @@ public class GlobalEnvironmentContext {
             serverBoot.config().group().shutdownGracefully();
             serverBoot.config().childGroup().shutdownGracefully();
         }
+        consoleThread.interrupt();
     }
     public static String localhost() {
         return localhost;
     }
 
+    public static void console(Thread thread) {
+        consoleThread = thread;
+    }
 }

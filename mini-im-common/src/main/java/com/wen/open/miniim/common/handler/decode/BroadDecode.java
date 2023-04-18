@@ -30,13 +30,6 @@ public class BroadDecode extends MessageToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, Object o, List list) {
-        if (ConfigContextHolder.config().getOnlineConsole()) {
-            log.info("======================online-list========================");
-            for (Map.Entry<String, ClientInfo> entry : GlobalEnvironmentContext.onlineMap.entrySet()) {
-                log.info("ip:{}", entry.getKey());
-                log.info("hostname:{}", entry.getValue().getHostname());
-            }
-        }
         DatagramPacket packet = (DatagramPacket) o;
         if (validate(packet)) {
             String ip = ParseUtil.udpIp(packet);
