@@ -17,12 +17,12 @@ import java.util.Scanner;
 public class ConnHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        GlobalEnvironmentContext.liveChannel.add(ParseUtil.ip(ctx.channel().remoteAddress()));
-        startConsoleThread(ctx.channel());
+        GlobalEnvironmentContext.liveChannel.add(ParseUtil.tcpIp(ctx));
         GlobalEnvironmentContext.hungChannel.add(ctx.channel());
         OnlinePacket onlinePacket = new OnlinePacket();
         onlinePacket.setOnline(GlobalEnvironmentContext.localhost());
         ctx.channel().writeAndFlush(onlinePacket);
+        startConsoleThread(ctx.channel());
     }
     private void startConsoleThread(Channel channel) {
         new Thread(() -> {

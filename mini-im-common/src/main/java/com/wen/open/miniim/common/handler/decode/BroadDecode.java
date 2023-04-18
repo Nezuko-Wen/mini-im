@@ -3,8 +3,8 @@ package com.wen.open.miniim.common.handler.decode;
 import com.wen.open.miniim.common.context.ConfigContextHolder;
 import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
 import com.wen.open.miniim.common.packentity.ClientInfo;
-import com.wen.open.miniim.common.packet.BroadcastPacket;
 import com.wen.open.miniim.common.protocol.PacketCodeC;
+import com.wen.open.miniim.common.util.ParseUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.socket.DatagramPacket;
@@ -30,14 +30,16 @@ public class BroadDecode extends MessageToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, Object o, List list) {
-        log.info("======================online-list========================");
-        for (Map.Entry<String, ClientInfo> entry : GlobalEnvironmentContext.onlineMap.entrySet()) {
-            log.info("ip:{}", entry.getKey());
-            log.info("hostname:{}", entry.getValue().getHostname());
+        if (ConfigContextHolder.config().getOnlineConsole()) {
+            log.info("======================online-list========================");
+            for (Map.Entry<String, ClientInfo> entry : GlobalEnvironmentContext.onlineMap.entrySet()) {
+                log.info("ip:{}", entry.getKey());
+                log.info("hostname:{}", entry.getValue().getHostname());
+            }
         }
         DatagramPacket packet = (DatagramPacket) o;
         if (validate(packet)) {
-            String ip = String.valueOf(packet.sender()).replace("/", "").split(":")[0];
+            String ip = ParseUtil.udpIp(packet);
             ByteBuf byteBuf = packet.copy().content();
             GlobalEnvironmentContext.ip(ip);
             list.add(PacketCodeC.INSTANCE.decode(byteBuf));

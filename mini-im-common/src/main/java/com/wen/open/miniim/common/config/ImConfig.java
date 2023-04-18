@@ -21,4 +21,6 @@ public class ImConfig {
 
     private Boolean skipElse;
 
+    private Boolean onlineConsole;
+
 }

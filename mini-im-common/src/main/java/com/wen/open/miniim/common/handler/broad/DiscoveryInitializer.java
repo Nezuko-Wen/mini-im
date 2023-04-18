@@ -16,6 +16,6 @@ public class DiscoveryInitializer extends ChannelInitializer<NioDatagramChannel>
         channel.pipeline()
                 .addLast(new DiscoveryRequestHandler())
                 .addLast(new BroadDecode())
-                .addLast(new RegisterHandler());
+                .addLast(RegisterHandler.INSTANCE);
     }
 }
