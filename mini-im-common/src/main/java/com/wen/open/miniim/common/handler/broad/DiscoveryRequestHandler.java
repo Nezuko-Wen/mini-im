@@ -3,7 +3,7 @@ package com.wen.open.miniim.common.handler.broad;
 import com.wen.open.miniim.common.context.ConfigContextHolder;
 import com.wen.open.miniim.common.context.Constant;
 import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
-import com.wen.open.miniim.common.packet.BroadcastPacket;
+import com.wen.open.miniim.common.entity.packet.BroadcastPacket;
 import com.wen.open.miniim.common.protocol.PacketCodeC;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

@@ -20,4 +20,6 @@ public class ImConfig {
     private Integer serverPort;
 
     private Boolean skipElse;
+
+    private int fileSplitLength;
 }

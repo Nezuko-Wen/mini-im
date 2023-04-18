@@ -1,19 +1,14 @@
 package com.wen.open.miniim.core.client;
 
-import com.wen.open.miniim.StartApplication;
 import com.wen.open.miniim.common.context.ConfigContextHolder;
 import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
 import com.wen.open.miniim.common.handler.broad.DiscoveryInitializer;
-import com.wen.open.miniim.common.handler.command.MessageHandler;
 import com.wen.open.miniim.common.handler.server.ServerChildInitializer;
-import com.wen.open.miniim.common.packentity.ClientInfo;
 import com.wen.open.miniim.common.packentity.ServerBoot;
-import com.wen.open.miniim.common.packet.MessagePacket;
-import com.wen.open.miniim.core.excutor.ConsoleThread;
+import com.wen.open.miniim.core.run.ConsoleThread;
 import io.netty.bootstrap.AbstractBootstrap;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -22,9 +17,6 @@ import io.netty.channel.socket.nio.NioDatagramChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
-import java.util.Scanner;
 
 /**
  * @author Wen

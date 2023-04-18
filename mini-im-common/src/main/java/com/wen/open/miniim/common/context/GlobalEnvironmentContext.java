@@ -32,7 +32,6 @@ public class GlobalEnvironmentContext {
     //TODO 下线
     public static final Set<Channel> hungChannel = new CopyOnWriteArraySet<>();
 
-
     private static ServerBoot serverBoot;
 
     private static volatile boolean broad = true;

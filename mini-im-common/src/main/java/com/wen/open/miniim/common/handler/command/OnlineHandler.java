@@ -2,7 +2,7 @@ package com.wen.open.miniim.common.handler.command;
 
 import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
 import com.wen.open.miniim.common.packentity.ClientInfo;
-import com.wen.open.miniim.common.packet.OnlinePacket;
+import com.wen.open.miniim.common.entity.packet.OnlinePacket;
 import com.wen.open.miniim.common.util.ParseUtil;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;

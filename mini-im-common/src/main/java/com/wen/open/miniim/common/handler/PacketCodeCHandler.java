@@ -1,6 +1,6 @@
 package com.wen.open.miniim.common.handler;
 
-import com.wen.open.miniim.common.packet.Packet;
+import com.wen.open.miniim.common.entity.packet.Packet;
 import com.wen.open.miniim.common.protocol.PacketCodeC;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandler;
@@ -25,8 +25,9 @@ public class PacketCodeCHandler extends MessageToMessageCodec<ByteBuf, Packet> {
     }
 
     @Override
-    protected void decode(ChannelHandlerContext ctx, ByteBuf byteBuf, List<Object> list) throws Exception {
-        list.add(PacketCodeC.INSTANCE.decode(byteBuf));
+    protected void decode(ChannelHandlerContext ctx, ByteBuf byteBuf, List<Object> list) {
+        Packet decode = PacketCodeC.INSTANCE.decode(byteBuf);
+        list.add(decode);
     }
 
     protected PacketCodeCHandler() {

@@ -1,5 +1,6 @@
-package com.wen.open.miniim.common.packet;
+package com.wen.open.miniim.common.entity.packet;
 
+import com.wen.open.miniim.common.entity.type.Command;
 import lombok.Data;
 
 /**

@@ -1,4 +1,4 @@
-package com.wen.open.miniim.common.packet;
+package com.wen.open.miniim.common.entity.packet;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;

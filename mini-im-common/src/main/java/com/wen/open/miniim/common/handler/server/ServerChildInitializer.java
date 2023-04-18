@@ -1,7 +1,7 @@
 package com.wen.open.miniim.common.handler.server;
 
 import com.wen.open.miniim.common.handler.PacketCodeCHandler;
-import com.wen.open.miniim.common.handler.command.CloseHandler;
+import com.wen.open.miniim.common.handler.command.FileHandler;
 import com.wen.open.miniim.common.handler.command.MessageHandler;
 import com.wen.open.miniim.common.handler.command.OnlineHandler;
 import com.wen.open.miniim.common.handler.decode.Spliter;
@@ -25,6 +25,7 @@ public class ServerChildInitializer extends ChannelInitializer<NioSocketChannel>
                 .addLast(PacketCodeCHandler.INSTANCE)
                 //接受客户端的连接信息
                 .addLast(OnlineHandler.INSTANCE)
+                .addLast(new FileHandler())
                 //文本消息处理
                 .addLast(MessageHandler.INSTANCE);
     }

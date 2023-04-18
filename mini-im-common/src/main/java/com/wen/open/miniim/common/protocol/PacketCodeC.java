@@ -1,6 +1,7 @@
 package com.wen.open.miniim.common.protocol;
 
-import com.wen.open.miniim.common.packet.*;
+import com.wen.open.miniim.common.entity.packet.*;
+import com.wen.open.miniim.common.entity.type.Command;
 import com.wen.open.miniim.common.protocol.serializer.Serializer;
 import com.wen.open.miniim.common.protocol.serializer.impl.JSONSerializer;
 import io.netty.buffer.ByteBuf;
@@ -28,6 +29,7 @@ public class PacketCodeC {
         packetTypeMap.put(Command.ONLINE.getVal(), OnlinePacket.class);
         packetTypeMap.put(Command.BROADCAST.getVal(), BroadcastPacket.class);
         packetTypeMap.put(Command.MESSAGE.getVal(), MessagePacket.class);
+        packetTypeMap.put(Command.FILE.getVal(), FilePacket.class);
         packetTypeMap.put(Command.CLOSE.getVal(), ClosePacket.class);
 
         serializerMap = new HashMap<>();

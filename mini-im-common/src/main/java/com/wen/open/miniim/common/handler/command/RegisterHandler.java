@@ -1,7 +1,7 @@
 package com.wen.open.miniim.common.handler.command;
 
 import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
-import com.wen.open.miniim.common.packet.BroadcastPacket;
+import com.wen.open.miniim.common.entity.packet.BroadcastPacket;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
 

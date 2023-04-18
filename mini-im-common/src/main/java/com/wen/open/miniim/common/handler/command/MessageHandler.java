@@ -1,6 +1,6 @@
 package com.wen.open.miniim.common.handler.command;
 
-import com.wen.open.miniim.common.packet.MessagePacket;
+import com.wen.open.miniim.common.entity.packet.MessagePacket;
 import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import lombok.extern.slf4j.Slf4j;
