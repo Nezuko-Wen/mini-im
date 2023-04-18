@@ -1,6 +1,5 @@
 package com.wen.open.miniim.common.handler.server;
 
-import com.wen.open.miniim.common.handler.LifeCyCleTestHandler;
 import com.wen.open.miniim.common.handler.command.CloseHandler;
 import com.wen.open.miniim.common.handler.command.MessageHandler;
 import com.wen.open.miniim.common.handler.command.OnlineHandler;
@@ -20,12 +19,14 @@ public class ServerChildInitializer extends ChannelInitializer<NioSocketChannel>
     @Override
     protected void initChannel(NioSocketChannel channel) {
         channel.pipeline()
+                //客户端下线
+                .addLast(new CloseHandler())
+                //拆包过滤器
                 .addLast(new Spliter())
                 .addLast(new PacketDecode())
                 //接受客户端的连接信息
                 .addLast(new OnlineHandler())
-                //客户端下线
-                .addLast(new CloseHandler())
+                //文本消息处理
                 .addLast(new MessageHandler())
                 .addLast(new PacketEncode());
     }
