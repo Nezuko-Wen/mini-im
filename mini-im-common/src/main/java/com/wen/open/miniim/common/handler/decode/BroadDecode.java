@@ -2,6 +2,7 @@ package com.wen.open.miniim.common.handler.decode;
 
 import com.wen.open.miniim.common.context.ConfigContextHolder;
 import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
+import com.wen.open.miniim.common.packentity.ClientInfo;
 import com.wen.open.miniim.common.packet.BroadcastPacket;
 import com.wen.open.miniim.common.protocol.PacketCodeC;
 import io.netty.buffer.ByteBuf;
@@ -30,10 +31,9 @@ public class BroadDecode extends MessageToMessageDecoder {
     @Override
     protected void decode(ChannelHandlerContext ctx, Object o, List list) {
         log.info("======================online-list========================");
-        for (Map.Entry<String, BroadcastPacket> entry : GlobalEnvironmentContext.onlineMap.entrySet()) {
+        for (Map.Entry<String, ClientInfo> entry : GlobalEnvironmentContext.onlineMap.entrySet()) {
             log.info("ip:{}", entry.getKey());
             log.info("hostname:{}", entry.getValue().getHostname());
-            log.info("serverPort:{}", entry.getValue().getServerPort());
         }
         DatagramPacket packet = (DatagramPacket) o;
         if (validate(packet)) {

@@ -38,11 +38,6 @@ public class LifeCyCleTestHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
-        Object ip = ctx.attr(AttributeKey.valueOf("ip")).get();
-        if (ip != null) {
-            GlobalEnvironmentContext.onlineMap.remove((String) ip);
-            GlobalEnvironmentContext.liveChannel.remove((String) ip);
-        }
         System.out.println("channel 被关闭：channelInactive()");
     }
 

@@ -1,8 +1,10 @@
 package com.wen.open.miniim.core.run;
 
 import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
+import com.wen.open.miniim.common.packet.ClosePacket;
 import com.wen.open.miniim.common.util.TaskExecutorUtil;
 import com.wen.open.miniim.core.client.MiniClient;
+import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Component;

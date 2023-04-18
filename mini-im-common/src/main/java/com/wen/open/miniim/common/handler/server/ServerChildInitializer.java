@@ -22,10 +22,11 @@ public class ServerChildInitializer extends ChannelInitializer<NioSocketChannel>
         channel.pipeline()
                 .addLast(new Spliter())
                 .addLast(new LifeCyCleTestHandler())
-                .addLast(new CloseHandler())
                 .addLast(new PacketDecode())
                 //接受客户端的连接信息
                 .addLast(new OnlineHandler())
+                //客户端下线
+                .addLast(new CloseHandler())
                 .addLast(new MessageHandler())
                 .addLast(new PacketEncode());
     }

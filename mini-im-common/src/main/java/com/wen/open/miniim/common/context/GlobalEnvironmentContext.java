@@ -2,6 +2,7 @@ package com.wen.open.miniim.common.context;
 
 import com.wen.open.miniim.common.handler.client.ClientConnInitializer;
 import com.wen.open.miniim.common.packentity.ClientBoot;
+import com.wen.open.miniim.common.packentity.ClientInfo;
 import com.wen.open.miniim.common.packentity.ServerBoot;
 import com.wen.open.miniim.common.packet.BroadcastPacket;
 import com.wen.open.miniim.common.packet.ClosePacket;
@@ -28,7 +29,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class GlobalEnvironmentContext {
 
     /** 客户端的地址列表 */
-    public static final ConcurrentHashMap<String, BroadcastPacket> onlineMap = new ConcurrentHashMap<>();
+    public static final ConcurrentHashMap<String, ClientInfo> onlineMap = new ConcurrentHashMap<>();
 
     public static final ConcurrentHashMap<String, Channel> liveChannel = new ConcurrentHashMap<>();
 
@@ -45,6 +46,12 @@ public class GlobalEnvironmentContext {
 
     private static String localhost;
 
+    private static ClientBoot clientBoot;
+
+    private static final ThreadLocal<String> currentIp = new ThreadLocal<>();
+
+    private static final ThreadLocal<Integer> currentPort = new ThreadLocal<>();
+
     static {
         try {
             localhost = String.valueOf(InetAddress.getLocalHost());
@@ -53,12 +60,6 @@ public class GlobalEnvironmentContext {
             localhost = "UNKNOWN";
         }
     }
-
-    private static final ThreadLocal<String> currentIp = new ThreadLocal<>();
-
-    private static ClientBoot clientBoot;
-
-    private static final ThreadLocal<Integer> currentPort = new ThreadLocal<>();
 
     public static ClientBoot client() {
         if (clientBoot == null) {
@@ -79,20 +80,8 @@ public class GlobalEnvironmentContext {
         return clientBoot;
     }
 
-    public static void register(BroadcastPacket broadPacket) {
+    public static void register() {
         client().tryConnect(currentIp.get(), currentPort.get());
-        String ip = currentIp.get();
-        GlobalEnvironmentContext.onlineMap.putIfAbsent(ip, broadPacket);
-        if (!liveChannel.containsKey(ip)) {
-            while (true) {
-                if (liveChannel.containsKey(ip)) {
-                    MessagePacket messagePacket = new MessagePacket();
-                    messagePacket.setMsg(localhost + " 我收到你的广播了!");
-                    liveChannel.get(ip).writeAndFlush(messagePacket);
-                    break;
-                }
-            }
-        }
         clear();
     }
 
@@ -129,15 +118,7 @@ public class GlobalEnvironmentContext {
         stopBroad();
         //关闭通道
         try {
-            hungChannel.forEach(channel -> {
-                Object ip = channel.attr(AttributeKey.valueOf("ip")).get();
-                if ( ip != null) {
-                    ClosePacket closePacket = new ClosePacket();
-                    closePacket.setIp((String) ip);
-                    channel.writeAndFlush(closePacket);
-                }
-                channel.close();
-            });
+            hungChannel.forEach(ChannelOutboundInvoker::close);
         } finally {
             serverBoot.config().group().shutdownGracefully();
             serverBoot.config().childGroup().shutdownGracefully();

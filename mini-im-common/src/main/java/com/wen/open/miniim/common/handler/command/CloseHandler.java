@@ -1,17 +1,18 @@
 package com.wen.open.miniim.common.handler.command;
 
 import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
-import com.wen.open.miniim.common.packet.ClosePacket;
 import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
 
 /**
  * @author Wen
  * @date 2023/4/17 18:30
  */
-public class CloseHandler extends CommandHandler<ClosePacket>{
+public class CloseHandler extends ChannelInboundHandlerAdapter {
+
     @Override
-    void doHandler(ChannelHandlerContext ctx, ClosePacket msg) {
-        GlobalEnvironmentContext.liveChannel.remove(msg.getIp());
-        GlobalEnvironmentContext.onlineMap.remove(msg.getIp());
+    public void channelInactive(ChannelHandlerContext ctx) {
+        System.out.println("channel 被关闭：channelInactive()");
+        GlobalEnvironmentContext.onlineMap.remove(ctx.channel().remoteAddress().toString());
     }
 }

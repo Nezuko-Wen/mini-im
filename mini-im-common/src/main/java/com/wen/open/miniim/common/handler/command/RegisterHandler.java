@@ -17,6 +17,6 @@ public class RegisterHandler extends CommandHandler<BroadcastPacket> {
     public void doHandler(ChannelHandlerContext ctx, BroadcastPacket data) {
         GlobalEnvironmentContext.port(data.getServerPort());
         //开启连接
-        GlobalEnvironmentContext.register(data);
+        GlobalEnvironmentContext.register();
     }
 }

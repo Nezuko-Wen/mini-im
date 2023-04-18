@@ -2,6 +2,7 @@ package com.wen.open.miniim.common.handler.client;
 
 import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
 import com.wen.open.miniim.common.packet.MessagePacket;
+import com.wen.open.miniim.common.packet.OnlinePacket;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -18,8 +19,11 @@ public class ConnHandler extends ChannelInboundHandlerAdapter {
     public void channelActive(ChannelHandlerContext ctx) {
         String ip = (String) ctx.attr(AttributeKey.valueOf("ip")).get();
         GlobalEnvironmentContext.liveChannel.putIfAbsent(ip, ctx.channel());
-        startConsoleThread(ctx.channel());
+//        startConsoleThread(ctx.channel());
         GlobalEnvironmentContext.hungChannel.add(ctx.channel());
+        OnlinePacket onlinePacket = new OnlinePacket();
+        onlinePacket.setOnline(GlobalEnvironmentContext.localhost());
+        ctx.channel().writeAndFlush(onlinePacket);
     }
     private void startConsoleThread(Channel channel) {
         new Thread(() -> {
