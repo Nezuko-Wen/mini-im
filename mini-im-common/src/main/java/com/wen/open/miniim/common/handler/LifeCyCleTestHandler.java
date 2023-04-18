@@ -1,9 +1,7 @@
 package com.wen.open.miniim.common.handler;
 
-import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.util.AttributeKey;
 
 public class LifeCyCleTestHandler extends ChannelInboundHandlerAdapter {
     @Override
@@ -36,10 +34,10 @@ public class LifeCyCleTestHandler extends ChannelInboundHandlerAdapter {
         super.channelReadComplete(ctx);
     }
 
-    @Override
-    public void channelInactive(ChannelHandlerContext ctx) {
-        System.out.println("channel 被关闭：channelInactive()");
-    }
+//    @Override
+//    public void channelInactive(ChannelHandlerContext ctx) {
+//        System.out.println("channel 被关闭：channelInactive()");
+//    }
 
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {

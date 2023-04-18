@@ -4,15 +4,11 @@ import com.wen.open.miniim.common.handler.client.ClientConnInitializer;
 import com.wen.open.miniim.common.packentity.ClientBoot;
 import com.wen.open.miniim.common.packentity.ClientInfo;
 import com.wen.open.miniim.common.packentity.ServerBoot;
-import com.wen.open.miniim.common.packet.BroadcastPacket;
-import com.wen.open.miniim.common.packet.ClosePacket;
-import com.wen.open.miniim.common.packet.MessagePacket;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelOutboundInvoker;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.util.AttributeKey;
 import lombok.extern.slf4j.Slf4j;
 
 import java.net.InetAddress;
@@ -31,7 +27,7 @@ public class GlobalEnvironmentContext {
     /** 客户端的地址列表 */
     public static final ConcurrentHashMap<String, ClientInfo> onlineMap = new ConcurrentHashMap<>();
 
-    public static final ConcurrentHashMap<String, Channel> liveChannel = new ConcurrentHashMap<>();
+    public static final Set<String> liveChannel = new CopyOnWriteArraySet<>();
 
     //TODO 下线
     public static final Set<Channel> hungChannel = new CopyOnWriteArraySet<>();
@@ -73,10 +69,10 @@ public class GlobalEnvironmentContext {
                     //保持心跳
                     .option(ChannelOption.SO_KEEPALIVE, true)
                     //开启Nagle算法，要求高实时性关闭，减少网络交互次数开启
-                    .option(ChannelOption.TCP_NODELAY, true);
+                    .option(ChannelOption.TCP_NODELAY, true)
+                    .handler(new ClientConnInitializer());
             clientBoot = bootstrap;
         }
-        clientBoot.handler(new ClientConnInitializer(currentIp.get()));
         return clientBoot;
     }
 
@@ -118,12 +114,7 @@ public class GlobalEnvironmentContext {
         stopBroad();
         //关闭通道
         try {
-            hungChannel.forEach(channel -> {
-                ClosePacket closePacket = new ClosePacket();
-                closePacket.setMsg("我下线了");
-                channel.writeAndFlush(closePacket);
-                channel.close();
-            });
+            hungChannel.forEach(ChannelOutboundInvoker::close);
         } finally {
             serverBoot.config().group().shutdownGracefully();
             serverBoot.config().childGroup().shutdownGracefully();

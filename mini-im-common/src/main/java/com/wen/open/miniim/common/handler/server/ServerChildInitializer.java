@@ -21,7 +21,6 @@ public class ServerChildInitializer extends ChannelInitializer<NioSocketChannel>
     protected void initChannel(NioSocketChannel channel) {
         channel.pipeline()
                 .addLast(new Spliter())
-                .addLast(new LifeCyCleTestHandler())
                 .addLast(new PacketDecode())
                 //接受客户端的连接信息
                 .addLast(new OnlineHandler())

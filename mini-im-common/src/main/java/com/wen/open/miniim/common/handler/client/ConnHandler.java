@@ -3,10 +3,10 @@ package com.wen.open.miniim.common.handler.client;
 import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
 import com.wen.open.miniim.common.packet.MessagePacket;
 import com.wen.open.miniim.common.packet.OnlinePacket;
+import com.wen.open.miniim.common.util.ParseUtil;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-import io.netty.util.AttributeKey;
 
 import java.util.Scanner;
 
@@ -17,9 +17,8 @@ import java.util.Scanner;
 public class ConnHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
-        String ip = (String) ctx.attr(AttributeKey.valueOf("ip")).get();
-        GlobalEnvironmentContext.liveChannel.putIfAbsent(ip, ctx.channel());
-//        startConsoleThread(ctx.channel());
+        GlobalEnvironmentContext.liveChannel.add(ParseUtil.ip(ctx.channel().remoteAddress()));
+        startConsoleThread(ctx.channel());
         GlobalEnvironmentContext.hungChannel.add(ctx.channel());
         OnlinePacket onlinePacket = new OnlinePacket();
         onlinePacket.setOnline(GlobalEnvironmentContext.localhost());

@@ -3,6 +3,7 @@ package com.wen.open.miniim.common.handler.command;
 import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
 import com.wen.open.miniim.common.packentity.ClientInfo;
 import com.wen.open.miniim.common.packet.OnlinePacket;
+import com.wen.open.miniim.common.util.ParseUtil;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,6 @@ public class OnlineHandler extends CommandHandler<OnlinePacket> {
         ClientInfo clientInfo = new ClientInfo();
         clientInfo.setHostname(msg.getOnline());
         clientInfo.setChannel((NioSocketChannel) ctx.channel());
-        GlobalEnvironmentContext.onlineMap.putIfAbsent(ctx.channel().remoteAddress().toString(), clientInfo);
+        GlobalEnvironmentContext.onlineMap.putIfAbsent(ParseUtil.ip(ctx.channel().remoteAddress()), clientInfo);
     }
 }
