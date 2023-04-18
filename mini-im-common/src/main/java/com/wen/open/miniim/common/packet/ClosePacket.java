@@ -8,7 +8,7 @@ import lombok.Data;
  */
 @Data
 public class ClosePacket extends Packet {
-    private String ip;
+    private String msg;
 
     @Override
     public Byte getCommand() {

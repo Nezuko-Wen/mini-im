@@ -118,7 +118,12 @@ public class GlobalEnvironmentContext {
         stopBroad();
         //关闭通道
         try {
-            hungChannel.forEach(ChannelOutboundInvoker::close);
+            hungChannel.forEach(channel -> {
+                ClosePacket closePacket = new ClosePacket();
+                closePacket.setMsg("我下线了");
+                channel.writeAndFlush(closePacket);
+                channel.close();
+            });
         } finally {
             serverBoot.config().group().shutdownGracefully();
             serverBoot.config().childGroup().shutdownGracefully();

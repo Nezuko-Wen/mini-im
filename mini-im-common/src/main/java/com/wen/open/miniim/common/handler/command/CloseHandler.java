@@ -1,18 +1,19 @@
 package com.wen.open.miniim.common.handler.command;
 
 import com.wen.open.miniim.common.context.GlobalEnvironmentContext;
+import com.wen.open.miniim.common.packet.ClosePacket;
 import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInboundHandlerAdapter;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Wen
  * @date 2023/4/17 18:30
  */
-public class CloseHandler extends ChannelInboundHandlerAdapter {
-
+@Slf4j
+public class CloseHandler extends CommandHandler<ClosePacket>{
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) {
-        System.out.println("channel 被关闭：channelInactive()");
+    void doHandler(ChannelHandlerContext ctx, ClosePacket msg) {
+        log.info(msg.getMsg());
         GlobalEnvironmentContext.onlineMap.remove(ctx.channel().remoteAddress().toString());
     }
 }
