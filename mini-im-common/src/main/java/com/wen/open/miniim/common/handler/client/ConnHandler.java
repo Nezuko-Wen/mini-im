@@ -12,11 +12,12 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
  */
 public class ConnHandler extends ChannelInboundHandlerAdapter {
     @Override
-    public void channelActive(ChannelHandlerContext ctx) {
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
         GlobalEnvironmentContext.liveChannel.add(ParseUtil.tcpIp(ctx));
         GlobalEnvironmentContext.hungChannel.add(ctx.channel());
         OnlinePacket onlinePacket = new OnlinePacket();
         onlinePacket.setOnline(GlobalEnvironmentContext.localhost());
         ctx.channel().writeAndFlush(onlinePacket);
+        super.channelActive(ctx);
     }
 }

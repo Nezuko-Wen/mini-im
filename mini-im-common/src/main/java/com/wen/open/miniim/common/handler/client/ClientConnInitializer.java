@@ -1,7 +1,10 @@
 package com.wen.open.miniim.common.handler.client;
 
+import com.wen.open.miniim.common.handler.IMIdleStateHandler;
 import com.wen.open.miniim.common.handler.PacketCodeCHandler;
 import com.wen.open.miniim.common.handler.command.FileHandler;
+import com.wen.open.miniim.common.handler.command.HeartBeatSendHandler;
+import com.wen.open.miniim.common.handler.command.HeartHandler;
 import com.wen.open.miniim.common.handler.command.MessageHandler;
 import com.wen.open.miniim.common.handler.decode.Spliter;
 import io.netty.channel.ChannelInitializer;
@@ -20,9 +23,12 @@ public class ClientConnInitializer extends ChannelInitializer<SocketChannel> {
     @Override
     protected void initChannel(SocketChannel channel) {
         channel.pipeline()
+                .addLast(new IMIdleStateHandler())
                 .addLast(new ConnHandler())
                 .addLast(new Spliter())
                 .addLast(PacketCodeCHandler.INSTANCE)
+                .addLast(new HeartBeatSendHandler())
+                .addLast(new HeartHandler())
                 .addLast(MessageHandler.INSTANCE)
                 .addLast(new FileHandler());
     }

@@ -31,6 +31,7 @@ public class PacketCodeC {
         packetTypeMap.put(Command.MESSAGE.getVal(), MessagePacket.class);
         packetTypeMap.put(Command.FILE.getVal(), FilePacket.class);
         packetTypeMap.put(Command.CLOSE.getVal(), ClosePacket.class);
+        packetTypeMap.put(Command.HEART.getVal(), HeartPacket.class);
 
         serializerMap = new HashMap<>();
         Serializer jsonSerializer = new JSONSerializer();

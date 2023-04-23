@@ -16,6 +16,7 @@ public enum Command {
     MESSAGE((byte) 0x03),
     FILE((byte) 0x04),
     CLOSE((byte) 0x05),
+    HEART((byte) 0x06)
     ;
 
     private final Byte val;
