@@ -12,6 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 public class HeartHandler extends CommandHandler<HeartPacket>{
     @Override
     void doHandler(ChannelHandlerContext ctx, HeartPacket msg) {
-        log.info("收到心跳响应");
+//        log.info("收到心跳响应");
     }
 }
