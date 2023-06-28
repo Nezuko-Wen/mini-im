@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 假死检测
  * @author Wen
  * @date 2023/4/23 08:44
  */
